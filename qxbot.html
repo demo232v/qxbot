@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QX Bot - Live Signals</title>
+    <link rel="icon" href="https://i.postimg.cc/Zq0tJS52/Chat-GPT-Image-Jun-15-2025-05-44-04-AM.png" type="image/png">
+    <style>
+        :root {
+            --rgb-color-1: 135, 45, 220;  /* Changed to #872ddc */
+            --rgb-color-2: 255, 50, 150;  /* Pink */
+            --rgb-color-3: 150, 0, 255;   /* Purple */
+            --rgb-color-up: 0, 255, 0;    /* Green for UP signals */
+            --rgb-color-down: 255, 0, 0;  /* Red for DOWN signals */
+        }
+        
+        body {
+            background-color: #121212;
+            background-image: url('https://i.postimg.cc/Zq0tJS52/Chat-GPT-Image-Jun-15-2025-05-44-04-AM.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 60% auto;
+            background-attachment: fixed;
+            background-opacity: 0.1;
+            color: #00a8ff;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            display: none;
+            position: relative;
+            background-color: rgba(0, 0, 0, 0.85);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(var(--rgb-color-1), 0.5);
+            box-shadow: 0 0 20px rgba(var(--rgb-color-1), 0.2);
+        }
+        .password-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid rgba(var(--rgb-color-1), 0.8);
+            box-shadow: 0 0 20px rgba(var(--rgb-color-1), 0.3),
+                        0 0 40px rgba(var(--rgb-color-1), 0.1),
+                        0 0 60px rgba(var(--rgb-color-1), 0.05);
+            text-align: center;
+            width: 350px;
+            z-index: 100;
+            animation: borderGlow 8s infinite alternate;
+        }
+        @keyframes borderGlow {
+            0% {
+                border-color: rgba(var(--rgb-color-1), 0.8);
+                box-shadow: 0 0 20px rgba(var(--rgb-color-1), 0.3),
+                            0 0 40px rgba(var(--rgb-color-1), 0.1),
+                            0 0 60px rgba(var(--rgb-color-1), 0.05);
+            }
+            50% {
+                border-color: rgba(var(--rgb-color-2), 0.8);
+                box-shadow: 0 0 20px rgba(var(--rgb-color-2), 0.3),
+                            0 0 40px rgba(var(--rgb-color-2), 0.1),
+                            0 0 60px rgba(var(--rgb-color-2), 0.05);
+            }
+            100% {
+                border-color: rgba(var(--rgb-color-3), 0.8);
+                box-shadow: 0 0 20px rgba(var(--rgb-color-3), 0.3),
+                            0 0 40px rgba(var(--rgb-color-3), 0.1),
+                            0 0 60px rgba(var(--rgb-color-3), 0.05);
+            }
+        }
+        .password-container h2 {
+            margin-top: 0;
+            color: rgba(var(--rgb-color-1), 1);
+            text-shadow: 0 0 10px rgba(var(--rgb-color-1), 0.5);
+        }
+        .password-container p {
+            margin-bottom: 20px;
+            color: #ccc;
+        }
+        .password-container input {
+            padding: 12px;
+            width: 80%;
+            margin-bottom: 15px;
+            background-color: #222;
+            border: 1px solid rgba(var(--rgb-color-1), 0.5);
+            color: white;
+            border-radius: 5px;
+            font-family: monospace;
+            transition: all 0.3s;
+        }
+        .password-container input:focus {
+            outline: none;
+            border-color: rgba(var(--rgb-color-2), 1);
+            box-shadow: 0 0 10px rgba(var(--rgb-color-2), 0.5);
+        }
+        .password-container button {
+            padding: 12px 25px;
+            background-color: rgba(var(--rgb-color-1), 0.8);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .password-container button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255,255,255,0) 0%,
+                rgba(255,255,255,0) 45%,
+                rgba(255,255,255,0.5) 50%,
+                rgba(255,255,255,0) 55%,
+                rgba(255,255,255,0) 100%
+            );
+            transform: rotate(30deg);
+            animation: shine 3s infinite;
+        }
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(30deg); }
+            100% { transform: translateX(100%) rotate(30deg); }
+        }
+        .password-container button:hover {
+            background-color: rgba(var(--rgb-color-1), 1);
+            box-shadow: 0 0 15px rgba(var(--rgb-color-1), 0.5);
+        }
+        .quick-login-btn {
+            padding: 12px 25px;
+            background-color: rgba(var(--rgb-color-2), 0.8);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: all 0.3s;
+        }
+        .quick-login-btn:hover {
+            background-color: rgba(var(--rgb-color-2), 1);
+            box-shadow: 0 0 15px rgba(var(--rgb-color-2), 0.5);
+        }
+        .telegram-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            color: rgba(var(--rgb-color-1), 1);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .telegram-link:hover {
+            color: rgba(var(--rgb-color-2), 1);
+            text-shadow: 0 0 10px rgba(var(--rgb-color-2), 0.5);
+        }
+        .telegram-link img {
+            width: 24px;
+            margin-right: 10px;
+        }
+        h1, h3 {
+            color: rgba(var(--rgb-color-1), 1);
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            text-shadow: 0 0 10px rgba(var(--rgb-color-1), 0.3);
+            position: relative;
+        }
+        h1::after, h3::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                rgba(var(--rgb-color-1), 0.8), 
+                rgba(var(--rgb-color-2), 0.8), 
+                rgba(var(--rgb-color-3), 0.8));
+            animation: rainbowBorder 8s linear infinite;
+            background-size: 200% 100%;
+        }
+        @keyframes rainbowBorder {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        a {
+            color: rgba(var(--rgb-color-2), 1);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        a:hover {
+            color: rgba(var(--rgb-color-1), 1);
+            text-decoration: underline;
+            text-shadow: 0 0 10px rgba(var(--rgb-color-1), 0.5);
+        }
+        select, input {
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #222;
+            color: white;
+            border: 1px solid rgba(var(--rgb-color-1), 0.5);
+            border-radius: 5px;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: rgba(var(--rgb-color-2), 1);
+            box-shadow: 0 0 10px rgba(var(--rgb-color-2), 0.5);
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            color: white;
+            background-color: rgba(var(--rgb-color-1), 0.8);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background-color: rgba(var(--rgb-color-1), 1);
+            box-shadow: 0 0 15px rgba(var(--rgb-color-1), 0.5);
+        }
+        .button-container {
+            display: flex;
+            justify-content: start;
+            flex-wrap: wrap;
+        }
+        .error-message {
+            color: rgba(var(--rgb-color-2), 1);
+            text-shadow: 0 0 5px rgba(var(--rgb-color-2), 0.5);
+        }
+        .current-signal {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid rgba(var(--rgb-color-1), 0.5);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .current-signal.signal-up-active {
+            border-color: rgba(var(--rgb-color-up), 0.8);
+            box-shadow: 0 0 20px rgba(var(--rgb-color-up), 0.3);
+        }
+        .current-signal.signal-down-active {
+            border-color: rgba(var(--rgb-color-down), 0.8);
+            box-shadow: 0 0 20px rgba(var(--rgb-color-down), 0.3);
+        }
+        .current-signal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                rgba(var(--rgb-color-1), 0) 0%,
+                rgba(var(--rgb-color-1), 0.1) 50%,
+                rgba(var(--rgb-color-1), 0) 100%
+            );
+            animation: noticeShine 3s infinite;
+        }
+        @keyframes noticeShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .signal-direction {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 10px 0;
+            text-shadow: 0 0 20px currentColor;
+        }
+        .signal-up {
+            color: rgba(var(--rgb-color-up), 1);
+        }
+        .signal-down {
+            color: rgba(var(--rgb-color-down), 1);
+        }
+        .signal-waiting {
+            color: rgba(var(--rgb-color-3), 1);
+        }
+        .countdown-timer {
+            font-size: 24px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+        .signal-info {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .signal-info span {
+            display: inline-block;
+            width: 48%;
+            text-align: left;
+        }
+        .signal-info span:last-child {
+            text-align: right;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        .status-active {
+            background-color: rgba(var(--rgb-color-1), 1);
+            box-shadow: 0 0 10px rgba(var(--rgb-color-1), 1);
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+        .status-inactive {
+            background-color: rgba(var(--rgb-color-2), 0.5);
+        }
+        .signal-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(var(--rgb-color-1), 0.8), 
+                transparent);
+            animation: logoGlow 3s infinite;
+        }
+        @keyframes logoGlow {
+            0% { opacity: 0.3; width: 60%; }
+            50% { opacity: 1; width: 80%; }
+            100% { opacity: 0.3; width: 60%; }
+        }
+        .logo img {
+            height: 60px;
+            filter: drop-shadow(0 0 5px rgba(var(--rgb-color-1), 0.5));
+        }
+        .paid-notice {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 5px solid rgba(var(--rgb-color-3), 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .rgb-light {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.1;
+            z-index: -1;
+            animation: moveLight 15s infinite alternate;
+        }
+        .rgb-light-1 {
+            background: radial-gradient(circle, rgba(var(--rgb-color-1), 1), transparent 70%);
+            top: 20%;
+            left: 10%;
+        }
+        .rgb-light-2 {
+            background: radial-gradient(circle, rgba(var(--rgb-color-2), 1), transparent 70%);
+            bottom: 10%;
+            right: 15%;
+            animation-delay: 3s;
+        }
+        .rgb-light-3 {
+            background: radial-gradient(circle, rgba(var(--rgb-color-3), 1), transparent 70%);
+            top: 50%;
+            right: 30%;
+            animation-delay: 6s;
+        }
+        @keyframes moveLight {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(50px, 50px); }
+            50% { transform: translate(-30px, 80px); }
+            75% { transform: translate(80px, -30px); }
+            100% { transform: translate(-50px, -50px); }
+        }
+        .market-notice {
+            font-size: 14px;
+            color: #ffcc00;
+            text-shadow: 0 0 5px rgba(255, 204, 0, 0.5);
+            text-align: center;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- RGB Background Lights -->
+    <div class="rgb-light rgb-light-1"></div>
+    <div class="rgb-light rgb-light-2"></div>
+    <div class="rgb-light rgb-light-3"></div>
+
+    <div class="password-container" id="password-container">
+        <div class="logo">
+            <img src="https://i.postimg.cc/Zq0tJS52/Chat-GPT-Image-Jun-15-2025-05-44-04-AM.png" alt="QX Bot Logo">
+        </div>
+        <h2>QX Bot</h2>
+        
+        <div class="paid-notice">
+            <p><strong>Premium Signal Service</strong></p>
+            <p>Telegram: <a href="https://t.me/traderjisanx" target="_blank">@traderjisanx</a></p>
+        </div>
+
+        <div id="password-form">
+            <p>Enter password to access live signals</p>
+            <input type="password" id="password-input" placeholder="Enter password">
+            <button id="submit-password">SUBMIT</button>
+            <p id="password-error" style="color: rgba(var(--rgb-color-2), 1); display: none;">Incorrect password. Please try again.</p>
+        </div>
+        
+        <button id="quick-login-btn" class="quick-login-btn" style="display: none;">QUICK LOGIN</button>
+        
+        <a href="https://t.me/SingleBotMaker" target="_blank" class="telegram-link">
+            <img src="https://telegram.org/img/t_logo.png" alt="Telegram">
+            Join Telegram Channel
+        </a>
+    </div>
+
+    <div class="container" id="main-container">
+        <div class="logo">
+            <img src="https://i.postimg.cc/Zq0tJS52/Chat-GPT-Image-Jun-15-2025-05-44-04-AM.png" alt="QX Bot Logo">
+        </div>
+        <h1>QX Bot - LIVE SIGNALS</h1>
+        <p id="timezone-info">Timezone: Asia/Dhaka | Date: <span id="current-date"></span> | Time: <span id="current-time"></span></p>
+        <a href="https://t.me/SingleBotMaker" target="_blank" rel="noopener noreferrer">Official Telegram Channel</a>
+        
+        <h3>Select Market:</h3>
+        <select id="asset-select">
+            <option value="">Select a market</option>
+           <option value="EUR/USD (OTC)">EUR/USD (OTC)</option>
+<option value="GBP/USD (OTC)">GBP/USD (OTC)</option>
+<option value="USD/JPY (OTC)">USD/JPY (OTC)</option>
+<option value="AUD/USD (OTC)">AUD/USD (OTC)</option>
+<option value="USD/CAD (OTC)">USD/CAD (OTC)</option>
+<option value="AUD/CAD (OTC)">AUD/CAD (OTC)</option>
+<option value="AUD/CHF (OTC)">AUD/CHF (OTC)</option>
+<option value="AUD/JPY (OTC)">AUD/JPY (OTC)</option>
+<option value="AUD/NZD (OTC)">AUD/NZD (OTC)</option>
+<option value="CAD/CHF (OTC)">CAD/CHF (OTC)</option>
+<option value="CHF/JPY (OTC)">CHF/JPY (OTC)</option>
+<option value="EUR/AUD (OTC)">EUR/AUD (OTC)</option>
+<option value="EUR/CAD (OTC)">EUR/CAD (OTC)</option>
+<option value="EUR/CHF (OTC)">EUR/CHF (OTC)</option>
+<option value="EUR/GBP (OTC)">EUR/GBP (OTC)</option>
+<option value="GBP/AUD (OTC)">GBP/AUD (OTC)</option>
+<option value="GBP/CAD (OTC)">GBP/CAD (OTC)</option>
+<option value="GBP/CHF (OTC)">GBP/CHF (OTC)</option>
+<option value="GBP/JPY (OTC)">GBP/JPY (OTC)</option>
+<option value="GBP/NZD (OTC)">GBP/NZD (OTC)</option>
+<option value="NZD/CAD (OTC)">NZD/CAD (OTC)</option>
+<option value="NZD/CHF (OTC)">NZD/CHF (OTC)</option>
+<option value="NZD/JPY (OTC)">NZD/JPY (OTC)</option>
+<option value="USD/BDT (OTC)">USD/BDT (OTC)</option>
+<option value="USD/BRL (OTC)">USD/BRL (OTC)</option>
+<option value="USD/CHF (OTC)">USD/CHF (OTC)</option>
+<option value="USD/COP (OTC)">USD/COP (OTC)</option>
+<option value="USD/DZD (OTC)">USD/DZD (OTC)</option>
+<option value="USD/INR (OTC)">USD/INR (OTC)</option>
+<option value="USD/NGN (OTC)">USD/NGN (OTC)</option>
+<option value="USD/PKR (OTC)">USD/PKR (OTC)</option>
+<option value="USD/SGD (OTC)">USD/SGD (OTC)</option>
+<option value="USD/TRY (OTC)">USD/TRY (OTC)</option>
+<option value="USD/ZAR (OTC)">USD/ZAR (OTC)</option>
+<option value="Gold (XAU/USD) (OTC)">Gold (XAU/USD) (OTC)</option>
+<option value="Silver (XAG/USD) (OTC)">Silver (XAG/USD) (OTC)</option>
+<option value="Crude Oil (WTI) (OTC)">Crude Oil (WTI) (OTC)</option>
+<option value="USCrude (OTC)">USCrude (OTC)</option>
+<option value="UKBrent (OTC)">UKBrent (OTC)</option>
+<option value="Bitcoin (BTC/USD) (OTC)">Bitcoin (BTC/USD) (OTC)</option>
+<option value="Ethereum (ETH/USD) (OTC)">Ethereum (ETH/USD) (OTC)</option>
+        </select>
+
+        <h3>Signal Interval (Minutes):</h3>
+        <select id="interval-select">
+            <option value="1">1 Minute</option>
+            <option value="2" selected>2 Minutes</option>
+            <option value="3">3 Minutes</option>
+            <option value="5">5 Minutes</option>
+            <option value="10">10 Minutes</option>
+        </select>
+
+        <div class="signal-controls">
+            <button id="get-signal">GET SIGNAL</button>
+            <span class="status-indicator status-inactive" id="status-indicator"></span>
+            <span id="status-text">INACTIVE</span>
+        </div>
+
+        <div class="current-signal" id="current-signal">
+            <div class="signal-info">
+                <span id="signal-market">MARKET: --</span>
+                <span id="signal-time">TIME: --:--:--</span>
+            </div>
+            <div class="market-notice">If You Lose Use MTG 1</div>
+            <div class="signal-direction signal-waiting" id="signal-direction">WAITING</div>
+            <div class="countdown-timer" id="countdown-timer">NEXT SIGNAL IN: --:--</div>
+        </div>
+
+        <div class="button-container">
+            <button class="telegram-btn" onclick="window.open('https://t.me/traderjisanx', '_blank')">TELEGRAM</button>
+        </div>
+
+        <p id="error-message" class="error-message"></p>
+    </div>
+
+    <script>
+        // Password is hardcoded and can only be changed in the code
+        const CORRECT_PASSWORD = "JX12";
+        const STORAGE_KEY = "qx_bot_auth";
+        
+        let currentSignal = null;
+        let signalInterval = null;
+        let nextSignalTime = null;
+        let isActive = false;
+        let revealTimer = null;
+        
+        // Check authentication status on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const isAuthenticated = localStorage.getItem(STORAGE_KEY) === 'true';
+            
+            if (isAuthenticated) {
+                // Show quick login option
+                document.getElementById('password-form').style.display = 'none';
+                document.getElementById('quick-login-btn').style.display = 'block';
+            }
+            
+            // Update time every second
+            setInterval(updateDateTime, 1000);
+            updateDateTime();
+        });
+
+        // Password login
+        document.getElementById('submit-password').addEventListener('click', function() {
+            const enteredPassword = document.getElementById('password-input').value;
+            const errorElement = document.getElementById('password-error');
+            
+            if (enteredPassword === CORRECT_PASSWORD) {
+                // Save authentication state
+                localStorage.setItem(STORAGE_KEY, 'true');
+                showMainApp();
+            } else {
+                errorElement.style.display = 'block';
+            }
+        });
+
+        // Quick login button
+        document.getElementById('quick-login-btn').addEventListener('click', function() {
+            showMainApp();
+        });
+
+        function showMainApp() {
+            document.getElementById('password-container').style.display = 'none';
+            document.getElementById('main-container').style.display = 'block';
+        }
+
+        // Handle Enter key in password field
+        document.getElementById('password-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('submit-password').click();
+            }
+        });
+
+        function formatTime(date) {
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            const seconds = date.getSeconds().toString().padStart(2, '0');
+            return `${hours}:${minutes}:${seconds}`;
+        }
+
+        function generateSignal(asset) {
+            const direction = Math.random() < 0.5 ? 'UP' : 'DOWN';
+            const currentTime = new Date();
+            
+            return {
+                asset,
+                time: formatTime(currentTime),
+                direction,
+                timestamp: currentTime.getTime()
+            };
+        }
+
+        function calculateNextSignalTime(intervalMinutes) {
+            const now = new Date();
+            const currentMinutes = now.getMinutes();
+            const currentSeconds = now.getSeconds();
+            
+            // Calculate how many seconds until the next interval
+            const secondsUntilNextInterval = (intervalMinutes * 60) - ((currentMinutes % intervalMinutes) * 60 + currentSeconds);
+            
+            const nextTime = new Date(now.getTime() + secondsUntilNextInterval * 1000);
+            return nextTime;
+        }
+
+        function updateCountdown() {
+            if (nextSignalTime) {
+                const now = new Date();
+                const diff = nextSignalTime - now;
+                
+                if (diff > 0) {
+                    const minutes = Math.floor(diff / 60000);
+                    const seconds = Math.floor((diff % 60000) / 1000);
+                    
+                    document.getElementById('countdown-timer').textContent = 
+                        `NEXT SIGNAL IN: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    
+                    // Show direction 5-10 seconds before signal
+                    if (diff <= 10000 && !document.getElementById('signal-direction').classList.contains('signal-up') && 
+                        !document.getElementById('signal-direction').classList.contains('signal-down')) {
+                        showDirectionBeforeSignal(diff);
+                    }
+                } else {
+                    document.getElementById('countdown-timer').textContent = 'SIGNAL READY';
+                    showSignal();
+                }
+            }
+        }
+
+        function showDirectionBeforeSignal(timeRemaining) {
+            // Show direction between 5-10 seconds before signal
+            if (timeRemaining <= 10000 && timeRemaining > 0) {
+                const directionElement = document.getElementById('signal-direction');
+                directionElement.textContent = currentSignal.direction;
+                
+                if (currentSignal.direction === 'UP') {
+                    directionElement.className = 'signal-direction signal-up';
+                    document.getElementById('current-signal').classList.add('signal-up-active');
+                    document.getElementById('current-signal').classList.remove('signal-down-active');
+                } else {
+                    directionElement.className = 'signal-direction signal-down';
+                    document.getElementById('current-signal').classList.add('signal-down-active');
+                    document.getElementById('current-signal').classList.remove('signal-up-active');
+                }
+            }
+        }
+
+        function showSignal() {
+            if (currentSignal) {
+                const directionElement = document.getElementById('signal-direction');
+                const signalBox = document.getElementById('current-signal');
+                
+                directionElement.textContent = currentSignal.direction;
+                
+                if (currentSignal.direction === 'UP') {
+                    directionElement.className = 'signal-direction signal-up';
+                    signalBox.classList.add('signal-up-active');
+                    signalBox.classList.remove('signal-down-active');
+                } else {
+                    directionElement.className = 'signal-direction signal-down';
+                    signalBox.classList.add('signal-down-active');
+                    signalBox.classList.remove('signal-up-active');
+                }
+                
+                // Stop the countdown
+                clearInterval(signalInterval);
+                signalInterval = null;
+                isActive = false;
+                updateStatus();
+            }
+        }
+
+        function startSignalGeneration() {
+            const selectedAsset = document.getElementById('asset-select').value;
+            const interval = parseInt(document.getElementById('interval-select').value);
+            const errorMessage = document.getElementById('error-message');
+            const signalBox = document.getElementById('current-signal');
+            
+            if (!selectedAsset) {
+                errorMessage.textContent = 'Please select a market before starting!';
+                return;
+            }
+
+            // Clear any existing interval and timer
+            if (signalInterval) {
+                clearInterval(signalInterval);
+            }
+            if (revealTimer) {
+                clearTimeout(revealTimer);
+            }
+
+            // Reset signal box styling
+            signalBox.classList.remove('signal-up-active', 'signal-down-active');
+            
+            errorMessage.textContent = '';
+            isActive = true;
+            updateStatus();
+            
+            // Reset direction display to waiting
+            document.getElementById('signal-direction').textContent = 'WAITING';
+            document.getElementById('signal-direction').className = 'signal-direction signal-waiting';
+            
+            // Generate new signal
+            currentSignal = generateSignal(selectedAsset);
+            document.getElementById('signal-market').textContent = `MARKET: ${currentSignal.asset}`;
+            document.getElementById('signal-time').textContent = `TIME: ${currentSignal.time}`;
+            
+            // Calculate next signal time
+            nextSignalTime = calculateNextSignalTime(interval);
+            
+            // Update countdown every second
+            signalInterval = setInterval(updateCountdown, 1000);
+        }
+
+        function updateStatus() {
+            const indicator = document.getElementById('status-indicator');
+            const statusText = document.getElementById('status-text');
+            
+            if (isActive) {
+                indicator.className = 'status-indicator status-active';
+                statusText.textContent = 'ACTIVE';
+            } else {
+                indicator.className = 'status-indicator status-inactive';
+                statusText.textContent = 'INACTIVE';
+            }
+        }
+
+        function updateDateTime() {
+            const currentDate = new Date();
+            document.getElementById('current-date').textContent = currentDate.toLocaleDateString();
+            document.getElementById('current-time').textContent = currentDate.toLocaleTimeString('en-GB');
+        }
+
+        // Event listeners
+        document.getElementById('get-signal').addEventListener('click', startSignalGeneration);
+    </script>
+</body>
+</html>
