@@ -423,6 +423,129 @@
             text-align: center;
             margin-top: 5px;
         }
+        
+        /* Popup Modal Styles */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        .popup-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, rgba(18, 18, 18, 0.98), rgba(30, 30, 30, 0.98));
+            border: 2px solid rgba(var(--rgb-color-1), 0.8);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 0 50px rgba(var(--rgb-color-1), 0.5),
+                        0 0 100px rgba(var(--rgb-color-1), 0.3);
+            animation: popupSlideIn 0.4s ease-out;
+            text-align: center;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes popupSlideIn {
+            from {
+                transform: translate(-50%, -60%);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, -50%);
+                opacity: 1;
+            }
+        }
+        
+        .popup-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        .popup-icon.error {
+            color: #ff5555;
+            text-shadow: 0 0 20px rgba(255, 85, 85, 0.5);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .popup-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: rgba(var(--rgb-color-1), 1);
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(var(--rgb-color-1), 0.5);
+        }
+        
+        .popup-message {
+            font-size: 16px;
+            color: #ccc;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        
+        .popup-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .popup-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .popup-btn-primary {
+            background: linear-gradient(135deg, rgba(var(--rgb-color-1), 1), rgba(var(--rgb-color-2), 1));
+            color: white;
+            box-shadow: 0 4px 15px rgba(var(--rgb-color-1), 0.4);
+        }
+        
+        .popup-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(var(--rgb-color-1), 0.6);
+        }
+        
+        .popup-btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .popup-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .telegram-icon {
+            display: inline-block;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
     </style>
 </head>
 <body>
@@ -439,7 +562,7 @@
         
         <div class="paid-notice">
             <p><strong>Premium Signal Service</strong></p>
-            <p>Telegram: <a href="https://t.me/traderjisanx" target="_blank">@traderjisanx</a></p>
+            <p>Telegram: <a href="https://t.me/Trading_Rabbit" target="_blank">@Trading_Rabbit</a></p>
         </div>
 
         <div id="password-form">
@@ -453,7 +576,7 @@
         
         <a href="https://t.me/SingleBotMaker" target="_blank" class="telegram-link">
             <img src="https://telegram.org/img/t_logo.png" alt="Telegram">
-            Join Telegram Channel
+            Channel: @SingleBotMaker
         </a>
     </div>
 
@@ -537,13 +660,53 @@
         </div>
 
         <div class="button-container">
-            <button class="telegram-btn" onclick="window.open('https://t.me/traderjisanx', '_blank')">TELEGRAM</button>
+            <button class="telegram-btn" onclick="window.open('https://t.me/Trading_Rabbit', '_blank')">CONTACT SUPPORT</button>
         </div>
 
         <p id="error-message" class="error-message"></p>
     </div>
 
+    <!-- Popup Modal -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-modal">
+            <div class="popup-icon error">X</div>
+            <div class="popup-title" id="popupTitle">Invalid Password!</div>
+            <div class="popup-message" id="popupMessage">
+                Please purchase a valid password to access this premium bot.
+            </div>
+            <div class="popup-buttons">
+                <button class="popup-btn popup-btn-primary" onclick="openTelegram()">
+                    <span class="telegram-icon">TELEGRAM</span>
+                </button>
+                <button class="popup-btn popup-btn-secondary" onclick="closePopup()">Close</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Popup functions
+        function showPopup(title, message) {
+            document.getElementById('popupTitle').textContent = title;
+            document.getElementById('popupMessage').innerHTML = message;
+            document.getElementById('popupOverlay').style.display = 'block';
+        }
+        
+        function closePopup() {
+            document.getElementById('popupOverlay').style.display = 'none';
+        }
+        
+        function openTelegram() {
+            window.open('https://t.me/Trading_Rabbit', '_blank');
+            closePopup();
+        }
+        
+        // Close popup when clicking outside
+        document.getElementById('popupOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePopup();
+            }
+        });
+        
         // Load saved password from localStorage on page load
         window.addEventListener('DOMContentLoaded', function() {
             const savedPassword = localStorage.getItem('qxbot_password');
@@ -640,13 +803,57 @@
                     
                     console.log('Bot initialized successfully');
                 } else {
-                    errorElement.textContent = result.message || 'Invalid password';
-                    errorElement.style.display = 'block';
+                    // Show beautiful popup for invalid password
+                    const message = result.message || 'Invalid password';
+                    
+                    if (message.includes('Invalid password')) {
+                        showPopup(
+                            'PASSWORD REQUIRED',
+                            'Please purchase a valid password to access this premium bot.<br><br>' +
+                            '<strong style="color: #f59e0b;">Get Your Password Now!</strong><br>' +
+                            'Contact us on Telegram: <strong>@Trading_Rabbit</strong><br>' +
+                            'Channel: <strong>@SingleBotMaker</strong>'
+                        );
+                    } else if (message.includes('blocked')) {
+                        showPopup(
+                            'PASSWORD BLOCKED',
+                            'Your password has been blocked.<br><br>' +
+                            '<strong style="color: #ff5555;">Contact Support:</strong><br>' +
+                            'Telegram: <strong>@Trading_Rabbit</strong>'
+                        );
+                    } else if (message.includes('expired')) {
+                        showPopup(
+                            'PASSWORD EXPIRED',
+                            'Your password has expired.<br><br>' +
+                            '<strong style="color: #ffaa00;">Renew Now:</strong><br>' +
+                            'Telegram: <strong>@Trading_Rabbit</strong>'
+                        );
+                    } else if (message.includes('Device limit')) {
+                        showPopup(
+                            'DEVICE LIMIT REACHED',
+                            message + '<br><br>' +
+                            '<strong style="color: #f59e0b;">Need More Devices?</strong><br>' +
+                            'Contact: <strong>@Trading_Rabbit</strong>'
+                        );
+                    } else {
+                        showPopup(
+                            'ERROR',
+                            message + '<br><br>' +
+                            'For any issues, contact: <strong>@Trading_Rabbit</strong>'
+                        );
+                    }
+                    
+                    errorElement.style.display = 'none';
                 }
             } catch (error) {
                 console.error('Error:', error);
-                errorElement.textContent = 'Connection error';
-                errorElement.style.display = 'block';
+                showPopup(
+                    'CONNECTION ERROR',
+                    'Unable to connect to server.<br><br>' +
+                    'Please check your internet connection.<br>' +
+                    'If problem persists, contact: <strong>@Trading_Rabbit</strong>'
+                );
+                errorElement.style.display = 'none';
             } finally {
                 this.disabled = false;
                 this.textContent = 'SUBMIT';
